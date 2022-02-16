@@ -127,7 +127,15 @@ const postsMutation = {
     const post = await Post.findOneAndUpdate({ userId, _id: postID }, { content: newContent });
     await post.save();
     return "Successful Editing";
+  },
+  postDelete: async ({ token, postID }) => {
+    const user = await auth(token);
+    if (!user) return "Authentication error";
+    const userId = user.id;
+    await Post.findOneAndDelete({ userId, _id: postID });
+    return "Deleted Successfully";
   }
+
 };
 
 
