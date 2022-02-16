@@ -165,6 +165,15 @@ const commentMutations = {
     return `Comment created successfully, there are ${post[0].comments.length} comments!`;
   }
 };
+const commentsQuery = {
+  getComments: async ({ token, postID }) => {
+    const user = await auth(token);
+    if (!user) return "Authentication error";
+    const userId = user.id;
+    const post = await Post.find({ userId, _id: postID });
+    return post[0].comments;
+  }
+};
 
 
 const rootValue = {
@@ -172,6 +181,7 @@ const rootValue = {
   ...postsMutation,
   ...postsQuery,
   ...commentMutations,
+  ...commentsQuery,
   hello: () => 'Hello world',
 };
 
