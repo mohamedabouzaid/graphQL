@@ -154,11 +154,24 @@ const postsQuery = {
   },
 };
 
+const commentMutations = {
+  createComment: async ({ token, postID, commentContent }) => {
+    const user = await auth(token);
+    if (!user) return "Authentication error";
+    const userId = user.id;
+    const post = await Post.find({ userId, _id: postID });
+    post[0].comments.push({ commentContent });
+    await post[0].save();
+    return `Comment created successfully, there are ${post[0].comments.length} comments!`;
+  }
+};
+
 
 const rootValue = {
   ...userMutations,
   ...postsMutation,
   ...postsQuery,
+  ...commentMutations,
   hello: () => 'Hello world',
 };
 
