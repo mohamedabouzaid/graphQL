@@ -120,6 +120,14 @@ const postsMutation = {
     await post.save();
     return 'Success';
   },
+  postEdit: async ({ token, postID, newContent }) => {
+    const user = await auth(token);
+    if (!user) return "Authentication error";
+    const userId = user.id;
+    const post = await Post.findOneAndUpdate({ userId, _id: postID }, { content: newContent });
+    await post.save();
+    return "Successful Editing";
+  }
 };
 
 
